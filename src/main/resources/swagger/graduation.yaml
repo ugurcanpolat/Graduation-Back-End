@@ -1,0 +1,250 @@
+swagger: "2.0"
+info:
+  description: |
+    This is the back-end side of the graduation project.
+  version: "1.0.0"
+  title: Graduation Project
+schemes:
+  - http
+paths:
+  /temperature/:
+    post:
+      tags:
+        - user
+      summary: Temperature service
+      operationId: temperatureDataGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: TemperatureRequest
+          in: body
+          description: temperature request with location
+          required: true
+          schema:
+            $ref: '#/definitions/TemperatureRequest'
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/TemperatureResponse"
+
+  /debug/temperature/:
+    post:
+      tags:
+        - user
+      summary: Temperature service
+      operationId: temperatureDataGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: TemperatureRequest
+          in: body
+          description: temperature request with location
+          required: true
+          schema:
+            $ref: '#/definitions/TemperatureRequest'
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/TemperatureResponse"
+
+  /modifyData/:
+    post:
+      tags:
+        - user
+      summary: Modify data service
+      operationId: modifyData
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: ModifyData
+          in: body
+          description: modify data request
+          required: true
+          schema:
+            $ref: '#/definitions/ModifyDataRequest'
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/ModifyDataResponse"
+
+  /modifyConfiguration/:
+    post:
+      tags:
+        - user
+      summary: Modify configuration service
+      operationId: modifyConfiguration
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: ModifyConfiguration
+          in: body
+          description: modify configuration request
+          required: true
+          schema:
+            $ref: '#/definitions/ModifyConfigurationRequest'
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/ModifyConfigurationResponse"
+
+definitions:
+  BaseResponse:
+    type: object
+    description: base response
+    properties:
+      success:
+        type: boolean
+        description: success or fail?
+      errorMsg:
+        type: string
+        description: error message
+
+  BaseRequest:
+    type: object
+    description: base request
+    required:
+      - location
+    properties:
+      location:
+        type: string
+        description: location
+        nullable: false
+
+  TemperatureRequest:
+    type: object
+    allOf:
+      - $ref: "#/definitions/BaseRequest"
+
+  TemperatureResponse:
+    type: object
+    allOf:
+      - $ref: "#/definitions/BaseResponse"
+      - properties:
+          data:
+            type: array
+            items:
+              $ref: "#/definitions/DataModel"
+
+  DataModel:
+    type: object
+    allOf:
+      - $ref: "#/definitions/DataPropertiesModel"
+      - properties:
+          values:
+            type: array
+            items:
+              type: object
+          dataType:
+            type: string
+
+  DataPropertiesModel:
+    type: object
+    required:
+      - name
+      - visual
+      - screenLocation
+      - modifiable
+    properties:
+      name:
+        type: string
+        nullable: false
+      visual:
+        type: string
+        nullable: false
+      screenLocation:
+        type: integer
+        nullable: false
+      modifiable:
+        type: boolean
+        nullable: false
+
+  ModifyConfigurationRequest:
+    type: object
+    required:
+      - link
+      - configuration
+    properties:
+      link:
+        type: string
+        nullable: false
+      configuration:
+        type: array
+        nullable: false
+        items:
+          $ref: "#/definitions/DataPropertiesModel"
+
+  ModifyConfigurationResponse:
+    type: object
+    allOf:
+      - $ref: "#/definitions/BaseResponse"
+
+  ModifyDataRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      operation:
+        type: string
+      value:
+        type: object
+      index:
+        type: integer
+
+  ModifyDataResponse:
+    type: object
+    allOf:
+      - $ref: "#/definitions/BaseResponse"
+
+  WeatherInformationResponse:
+    type: object
+    properties:
+      LocalObservationDateTime:
+        type: string
+      EpochTime:
+        type: integer
+      WeatherText:
+        type: string
+      WeatherIcon:
+        type: integer
+      HasPrecipitation:
+        type: boolean
+      PrecipitationType:
+        type: string
+      IsDayTime:
+        type: boolean
+      Temperature:
+        type: object
+        properties:
+          Metric:
+            $ref: '#/definitions/TemperatureValue'
+          Imperial:
+            $ref: '#/definitions/TemperatureValue'
+      MobileLink:
+        type: string
+      Link:
+        type: string
+
+  TemperatureValue:
+    type: object
+    properties:
+      Value:
+        type: number
+        format: double
+      Unit:
+        type: string
+      UnitType:
+        type: integer
+
+
