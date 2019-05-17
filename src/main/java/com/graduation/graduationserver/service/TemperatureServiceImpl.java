@@ -49,14 +49,17 @@ public class TemperatureServiceImpl implements TemperatureService {
             tempData.add(data.getAvgTemp().floatValue());
         }
 
-        dataList.remove("temperature");
-        dataList.put("temperature", tempData);
+        dataList.remove("sensorTemperature");
+        dataList.put("sensorTemperature", tempData);
 
-        List<Object> tempInfoTextDummyValues = new ArrayList<>();
-        tempInfoTextDummyValues.add("Thermostat is set to " + dataList.get("thermostat").get(0).toString() +
+        List<DataPropertiesModel> temperatureList = linkConfigurations.get("/temperature/");
+        DataPropertiesModel setTemperature = temperatureList.get(temperatureList.size()-1);
+        setTemperature.setText("Indoor temperature is set to " + dataList.get("setTemperature").get(0).toString() +
                 " Celsius.");
-        dataList.remove("thermostatText");
-        dataList.put("thermostatText", tempInfoTextDummyValues);
+        linkConfigurations.remove("/temperature/");
+        temperatureList.remove(temperatureList.size()-1);
+        temperatureList.add(setTemperature);
+        linkConfigurations.put("/temperature/", temperatureList);
 
         List<DataPropertiesModel> properties = linkConfigurations.get("/temperature/");
         List<DataModel> dataModelList = new ArrayList<>();
@@ -69,6 +72,7 @@ public class TemperatureServiceImpl implements TemperatureService {
                 dataModel.setScreenLocation(propertiesModel.getScreenLocation());
                 dataModel.setModifiable(propertiesModel.isModifiable());
                 dataModel.setLabels(propertiesModel.getLabels());
+                dataModel.setText(propertiesModel.getText());
 
                 List<Object> data = dataList.get(propertiesModel.getName());
 
@@ -111,22 +115,22 @@ public class TemperatureServiceImpl implements TemperatureService {
             iconLink += weather.getWeatherIcon().toString() + "-s.png";
         }
 
-        if (dataList.containsKey("text")) {
-            dataList.get("text").clear();
-            dataList.get("text").add(text);
+        if (dataList.containsKey("weatherText")) {
+            dataList.get("weatherText").clear();
+            dataList.get("weatherText").add(text);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(text);
-            dataList.put("text", dummyList);
+            dataList.put("weatherText", dummyList);
         }
 
-        if (dataList.containsKey("image")) {
-            dataList.get("image").clear();
-            dataList.get("image").add(iconLink);
+        if (dataList.containsKey("weatherIcon")) {
+            dataList.get("weatherIcon").clear();
+            dataList.get("weatherIcon").add(iconLink);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(iconLink);
-            dataList.put("image", dummyList);
+            dataList.put("weatherIcon", dummyList);
         }
 
     }

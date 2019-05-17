@@ -176,6 +176,8 @@ definitions:
       modifiable:
         type: boolean
         nullable: false
+      text:
+        type: string
 
   ModifyConfigurationRequest:
     type: object

@@ -60,21 +60,21 @@ public class ModifyDataServiceImpl implements ModifyDataService {
     }
 
     private ModifyDataResponse addToDataList(String name, Object value) {
-        System.out.println("Add operation has performed.");
+        System.out.println("Add operation has performed to " + name + ".");
         dataList.get(name).add(value);
 
         return CreateResponse(true, null);
     }
 
     private ModifyDataResponse deleteFromDataList(String name, int index) {
-        System.out.println("Delete operation has performed.");
+        System.out.println("Delete operation has performed to " + name + ".");
         dataList.get(name).remove(index);
 
         return CreateResponse(true, null);
     }
 
     private ModifyDataResponse modifyDataFromDataList(String name, int index, Object value) {
-        System.out.println("Modify operation has performed.");
+        System.out.println("Modify operation has performed to " + name + ".");
         dataList.get(name).set(index, value);
 
         return CreateResponse(true, null);

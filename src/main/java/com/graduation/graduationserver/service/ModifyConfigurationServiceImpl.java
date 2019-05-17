@@ -18,9 +18,15 @@ public class ModifyConfigurationServiceImpl implements ModifyConfigurationServic
     public ModifyConfigurationResponse modifyConfiguration(String link, List<DataPropertiesModel> configuration) {
         ModifyConfigurationResponse response = new ModifyConfigurationResponse();
 
-        linkConfigurations.put(link, configuration);
-
-        response.setSuccess(true);
+        if (linkConfigurations.containsKey(link)) {
+            System.out.println("Modified configuration for " + link + ".");
+            linkConfigurations.remove(link);
+            linkConfigurations.put(link, configuration);
+            response.setSuccess(true);
+        } else {
+            System.out.println("Cannot modify configuration for " + link + " : not found.");
+            response.setSuccess(false);
+        }
 
         return response;
     }

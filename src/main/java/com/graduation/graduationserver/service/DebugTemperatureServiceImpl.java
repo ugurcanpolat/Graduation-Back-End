@@ -26,29 +26,32 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
 
         updateDataWithWeatherInformation();
 
-        List<Object> tempInfoTextDummyValues = new ArrayList<>();
-        tempInfoTextDummyValues.add("Thermostat is set to " + dataList.get("thermostat").get(0).toString() +
+        List<DataPropertiesModel> temperatureList = linkConfigurations.get("/temperature/");
+        DataPropertiesModel setTemperature = temperatureList.get(temperatureList.size()-1);
+        setTemperature.setText("Indoor temperature is set to " + dataList.get("setTemperature").get(0).toString() +
                 " Celsius.");
-        dataList.remove("thermostatText");
-        dataList.put("thermostatText", tempInfoTextDummyValues);
+        linkConfigurations.remove("/temperature/");
+        temperatureList.remove(temperatureList.size()-1);
+        temperatureList.add(setTemperature);
+        linkConfigurations.put("/temperature/", temperatureList);
 
         Random rd = new Random();
 
-        Double thermostat = (Double) dataList.get("thermostat").get(0);
-        Float lastTemperature = (Float) dataList.get("temperature").get(dataList.get("temperature").size()-1);
+        Double thermostat = (Double) dataList.get("setTemperature").get(0);
+        Float lastTemperature = (Float) dataList.get("sensorTemperature").get(dataList.get("sensorTemperature").size()-1);
 
         if (thermostat.floatValue() - lastTemperature > 0.4) {
             float dummy = lastTemperature + (float) (rd.nextInt(3) + 1) / 10;
             System.out.println("Option 1: " + dummy);
-            dataList.get("temperature").add(dummy);
+            dataList.get("sensorTemperature").add(dummy);
         } else if (lastTemperature - thermostat.floatValue() > 0.4) {
             float dummy = lastTemperature - (float) (rd.nextInt(3) + 1) / 10;
             System.out.println("Option 2: " + dummy);
-            dataList.get("temperature").add(dummy);
+            dataList.get("sensorTemperature").add(dummy);
         } else {
             float dummy = lastTemperature + (float) (rd.nextInt(4) - 2) / 10;
             System.out.println("Option 3: " + dummy);
-            dataList.get("temperature").add(dummy);
+            dataList.get("sensorTemperature").add(dummy);
         }
 
         List<DataPropertiesModel> properties = linkConfigurations.get("/temperature/");
@@ -62,6 +65,7 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
                 dataModel.setScreenLocation(propertiesModel.getScreenLocation());
                 dataModel.setModifiable(propertiesModel.isModifiable());
                 dataModel.setLabels(propertiesModel.getLabels());
+                dataModel.setText(propertiesModel.getText());
 
                 List<Object> data = dataList.get(propertiesModel.getName());
 
@@ -95,22 +99,22 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
 
         String iconLink = "https://developer.accuweather.com/sites/default/files/01-s.png";
 
-        if (dataList.containsKey("text")) {
-            dataList.get("text").clear();
-            dataList.get("text").add(text);
+        if (dataList.containsKey("weatherText")) {
+            dataList.get("weatherText").clear();
+            dataList.get("weatherText").add(text);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(text);
-            dataList.put("text", dummyList);
+            dataList.put("weatherText", dummyList);
         }
 
-        if (dataList.containsKey("image")) {
-            dataList.get("image").clear();
-            dataList.get("image").add(iconLink);
+        if (dataList.containsKey("weatherIcon")) {
+            dataList.get("weatherIcon").clear();
+            dataList.get("weatherIcon").add(iconLink);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(iconLink);
-            dataList.put("image", dummyList);
+            dataList.put("weatherIcon", dummyList);
         }
 
     }

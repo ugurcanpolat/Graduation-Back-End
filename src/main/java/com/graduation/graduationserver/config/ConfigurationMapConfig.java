@@ -21,7 +21,7 @@ public class ConfigurationMapConfig {
         List<DataPropertiesModel> propertiesModelList = new ArrayList<>();
 
         DataPropertiesModel temperature = new DataPropertiesModel();
-        temperature.setName("temperature");
+        temperature.setName("sensorTemperature");
         temperature.setScreenLocation(1);
         temperature.setVisual("line");
         temperature.setModifiable(false);
@@ -33,32 +33,26 @@ public class ConfigurationMapConfig {
         propertiesModelList.add(temperature);
 
         DataPropertiesModel text = new DataPropertiesModel();
-        text.setName("text");
+        text.setName("weatherText");
         text.setScreenLocation(3);
         text.setVisual("text");
         text.setModifiable(false);
         propertiesModelList.add(text);
 
         DataPropertiesModel image = new DataPropertiesModel();
-        image.setName("image");
+        image.setName("weatherIcon");
         image.setScreenLocation(2);
         image.setVisual("image");
         image.setModifiable(false);
         propertiesModelList.add(image);
 
         DataPropertiesModel thermostat = new DataPropertiesModel();
-        thermostat.setName("thermostat");
-        thermostat.setScreenLocation(0);
-        thermostat.setVisual("other");
+        thermostat.setName("setTemperature");
+        thermostat.setScreenLocation(4);
+        thermostat.setVisual("data-text");
         thermostat.setModifiable(true);
+        thermostat.setText("-");
         propertiesModelList.add(thermostat);
-
-        DataPropertiesModel thermostatText = new DataPropertiesModel();
-        thermostatText.setName("thermostatText");
-        thermostatText.setScreenLocation(4);
-        thermostatText.setVisual("text");
-        thermostatText.setModifiable(false);
-        propertiesModelList.add(thermostatText);
 
         configuration.put("/temperature/", propertiesModelList);
 
