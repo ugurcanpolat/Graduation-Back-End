@@ -157,6 +157,13 @@ definitions:
       - screenLocation
       - modifiable
     properties:
+      labels:
+        type: object
+        properties:
+          vertical:
+            type: string
+          horizontal:
+            type: string
       name:
         type: string
         nullable: false
@@ -235,6 +242,31 @@ definitions:
         type: string
       Link:
         type: string
+
+  TemperatureInformationResponse:
+    type: object
+    properties:
+      ID:
+        type: integer
+      DateAndTime:
+        type: integer
+      Temperature:
+        type: number
+        format: double
+
+  AverageTemperatureInformationResponse:
+    type: object
+    properties:
+      avgTempData:
+        type: array
+        items:
+          type: object
+          properties:
+            avgTime:
+              type: integer
+            avgTemp:
+              type: number
+              format: double
 
   TemperatureValue:
     type: object

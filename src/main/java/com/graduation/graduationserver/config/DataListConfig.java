@@ -1,7 +1,10 @@
 package com.graduation.graduationserver.config;
 
+import com.graduation.graduationserver.adapter.TemperatureInformationAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import swaggergen.model.TemperatureInformationResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,18 +14,28 @@ import java.util.Map;
 @Configuration
 public class DataListConfig {
 
+    @Autowired
+    private TemperatureInformationAdapter temperatureInformationAdapter;
+
     @Bean
     public Map<String, List<Object>> data() {
         Map<String, List<Object>> dataList = new HashMap<>();
 
+        TemperatureInformationResponse tempInfoResponse = temperatureInformationAdapter.getTemperatureInformation();
+
+        List<Object> tempInfoTextDummyValues = new ArrayList<>();
+        tempInfoTextDummyValues.add("Thermostat is set to " + tempInfoResponse.getTemperature().toString() + " Celsius.");
+        dataList.put("thermostatText", tempInfoTextDummyValues);
+
+        List<Object> tempInfoDummyValues = new ArrayList<>();
+        tempInfoDummyValues.add(tempInfoResponse.getTemperature());
+        dataList.put("thermostat", tempInfoDummyValues);
+
         List<Object> temperatureDummyValues = new ArrayList<>();
-        temperatureDummyValues.add(24.8);
-        temperatureDummyValues.add(23.2);
-        temperatureDummyValues.add(24.9);
-        temperatureDummyValues.add(26.4);
-        temperatureDummyValues.add(12.3);
-        temperatureDummyValues.add(39.2);
-        temperatureDummyValues.add(100.2);
+        temperatureDummyValues.add(21.2f);
+        temperatureDummyValues.add(21.3f);
+        temperatureDummyValues.add(22.9f);
+        temperatureDummyValues.add(21.1f);
 
         dataList.put("temperature", temperatureDummyValues);
 

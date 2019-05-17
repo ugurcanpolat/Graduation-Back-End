@@ -1,14 +1,13 @@
 package com.graduation.graduationserver.service;
 
+import com.graduation.graduationserver.adapter.TemperatureInformationAdapter;
 import com.graduation.graduationserver.adapter.WeatherInformationAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import swaggergen.model.DataModel;
-import swaggergen.model.DataPropertiesModel;
-import swaggergen.model.TemperatureResponse;
-import swaggergen.model.WeatherInformationResponse;
+import swaggergen.model.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +22,9 @@ public class TemperatureServiceImpl implements TemperatureService {
     private WeatherInformationAdapter weatherInformationAdapter;
 
     @Autowired
+    private TemperatureInformationAdapter temperatureInformationAdapter;
+
+    @Autowired
     private Map<String, List<Object>> dataList;
 
     @Autowired
@@ -35,6 +37,27 @@ public class TemperatureServiceImpl implements TemperatureService {
 
         updateDataWithWeatherInformation();
 
+        AverageTemperatureInformationResponse avgTempInfoResponse =
+                temperatureInformationAdapter.getAvgTemperatureInformation();
+
+        List<AverageTemperatureInformationResponseAvgTempData> responseData = avgTempInfoResponse.getAvgTempData();
+        responseData.sort(new AverageTempComparator());
+
+        List<Object> tempData = new ArrayList<>();
+
+        for (AverageTemperatureInformationResponseAvgTempData data : responseData) {
+            tempData.add(data.getAvgTemp().floatValue());
+        }
+
+        dataList.remove("temperature");
+        dataList.put("temperature", tempData);
+
+        List<Object> tempInfoTextDummyValues = new ArrayList<>();
+        tempInfoTextDummyValues.add("Thermostat is set to " + dataList.get("thermostat").get(0).toString() +
+                " Celsius.");
+        dataList.remove("thermostatText");
+        dataList.put("thermostatText", tempInfoTextDummyValues);
+
         List<DataPropertiesModel> properties = linkConfigurations.get("/temperature/");
         List<DataModel> dataModelList = new ArrayList<>();
 
@@ -45,6 +68,7 @@ public class TemperatureServiceImpl implements TemperatureService {
                 dataModel.setVisual(propertiesModel.getVisual());
                 dataModel.setScreenLocation(propertiesModel.getScreenLocation());
                 dataModel.setModifiable(propertiesModel.isModifiable());
+                dataModel.setLabels(propertiesModel.getLabels());
 
                 List<Object> data = dataList.get(propertiesModel.getName());
 
@@ -105,6 +129,13 @@ public class TemperatureServiceImpl implements TemperatureService {
             dataList.put("image", dummyList);
         }
 
+    }
+    class AverageTempComparator implements Comparator<AverageTemperatureInformationResponseAvgTempData> {
+        @Override
+        public int compare(AverageTemperatureInformationResponseAvgTempData a,
+                           AverageTemperatureInformationResponseAvgTempData b) {
+            return a.getAvgTime() < b.getAvgTime() ? -1 : a.getAvgTime() == b.getAvgTime() ? 0 : 1;
+        }
     }
 
 }

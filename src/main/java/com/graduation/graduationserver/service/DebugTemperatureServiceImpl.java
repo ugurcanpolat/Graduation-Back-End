@@ -9,6 +9,7 @@ import swaggergen.model.TemperatureResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class DebugTemperatureServiceImpl implements DebugTemperatureService {
@@ -25,6 +26,31 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
 
         updateDataWithWeatherInformation();
 
+        List<Object> tempInfoTextDummyValues = new ArrayList<>();
+        tempInfoTextDummyValues.add("Thermostat is set to " + dataList.get("thermostat").get(0).toString() +
+                " Celsius.");
+        dataList.remove("thermostatText");
+        dataList.put("thermostatText", tempInfoTextDummyValues);
+
+        Random rd = new Random();
+
+        Double thermostat = (Double) dataList.get("thermostat").get(0);
+        Float lastTemperature = (Float) dataList.get("temperature").get(dataList.get("temperature").size()-1);
+
+        if (thermostat.floatValue() - lastTemperature > 0.4) {
+            float dummy = lastTemperature + (float) (rd.nextInt(3) + 1) / 10;
+            System.out.println("Option 1: " + dummy);
+            dataList.get("temperature").add(dummy);
+        } else if (lastTemperature - thermostat.floatValue() > 0.4) {
+            float dummy = lastTemperature - (float) (rd.nextInt(3) + 1) / 10;
+            System.out.println("Option 2: " + dummy);
+            dataList.get("temperature").add(dummy);
+        } else {
+            float dummy = lastTemperature + (float) (rd.nextInt(4) - 2) / 10;
+            System.out.println("Option 3: " + dummy);
+            dataList.get("temperature").add(dummy);
+        }
+
         List<DataPropertiesModel> properties = linkConfigurations.get("/temperature/");
         List<DataModel> dataModelList = new ArrayList<>();
 
@@ -35,6 +61,7 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
                 dataModel.setVisual(propertiesModel.getVisual());
                 dataModel.setScreenLocation(propertiesModel.getScreenLocation());
                 dataModel.setModifiable(propertiesModel.isModifiable());
+                dataModel.setLabels(propertiesModel.getLabels());
 
                 List<Object> data = dataList.get(propertiesModel.getName());
 
