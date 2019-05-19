@@ -28,7 +28,7 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
 
         List<DataPropertiesModel> temperatureList = linkConfigurations.get("/temperature/");
         DataPropertiesModel setTemperature = temperatureList.get(temperatureList.size()-1);
-        setTemperature.setText("Indoor temperature is set to " + dataList.get("setTemperature").get(0).toString() +
+        setTemperature.setText("Indoor temperature is set to " + dataList.get("liveTemperatureData").get(0).toString() +
                 " Celsius.");
         linkConfigurations.remove("/temperature/");
         temperatureList.remove(temperatureList.size()-1);
@@ -37,21 +37,21 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
 
         Random rd = new Random();
 
-        Double thermostat = (Double) dataList.get("setTemperature").get(0);
-        Float lastTemperature = (Float) dataList.get("sensorTemperature").get(dataList.get("sensorTemperature").size()-1);
+        Double thermostat = (Double) dataList.get("liveTemperatureData").get(0);
+        Float lastTemperature = (Float) dataList.get("historicalTemperatureData").get(dataList.get("historicalTemperatureData").size()-1);
 
         if (thermostat.floatValue() - lastTemperature > 0.4) {
             float dummy = lastTemperature + (float) (rd.nextInt(3) + 1) / 10;
             System.out.println("Option 1: " + dummy);
-            dataList.get("sensorTemperature").add(dummy);
+            dataList.get("historicalTemperatureData").add(dummy);
         } else if (lastTemperature - thermostat.floatValue() > 0.4) {
             float dummy = lastTemperature - (float) (rd.nextInt(3) + 1) / 10;
             System.out.println("Option 2: " + dummy);
-            dataList.get("sensorTemperature").add(dummy);
+            dataList.get("historicalTemperatureData").add(dummy);
         } else {
             float dummy = lastTemperature + (float) (rd.nextInt(4) - 2) / 10;
             System.out.println("Option 3: " + dummy);
-            dataList.get("sensorTemperature").add(dummy);
+            dataList.get("historicalTemperatureData").add(dummy);
         }
 
         List<DataPropertiesModel> properties = linkConfigurations.get("/temperature/");
@@ -99,22 +99,22 @@ public class DebugTemperatureServiceImpl implements DebugTemperatureService {
 
         String iconLink = "https://developer.accuweather.com/sites/default/files/01-s.png";
 
-        if (dataList.containsKey("weatherText")) {
-            dataList.get("weatherText").clear();
-            dataList.get("weatherText").add(text);
+        if (dataList.containsKey("liveWeatherInfoText")) {
+            dataList.get("liveWeatherInfoText").clear();
+            dataList.get("liveWeatherInfoText").add(text);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(text);
-            dataList.put("weatherText", dummyList);
+            dataList.put("liveWeatherInfoText", dummyList);
         }
 
-        if (dataList.containsKey("weatherIcon")) {
-            dataList.get("weatherIcon").clear();
-            dataList.get("weatherIcon").add(iconLink);
+        if (dataList.containsKey("liveWeatherStatusImage")) {
+            dataList.get("liveWeatherStatusImage").clear();
+            dataList.get("liveWeatherStatusImage").add(iconLink);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(iconLink);
-            dataList.put("weatherIcon", dummyList);
+            dataList.put("liveWeatherStatusImage", dummyList);
         }
 
     }

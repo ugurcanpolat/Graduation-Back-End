@@ -49,12 +49,12 @@ public class TemperatureServiceImpl implements TemperatureService {
             tempData.add(data.getAvgTemp().floatValue());
         }
 
-        dataList.remove("sensorTemperature");
-        dataList.put("sensorTemperature", tempData);
+        dataList.remove("historicalTemperatureData");
+        dataList.put("historicalTemperatureData", tempData);
 
         List<DataPropertiesModel> temperatureList = linkConfigurations.get("/temperature/");
         DataPropertiesModel setTemperature = temperatureList.get(temperatureList.size()-1);
-        setTemperature.setText("Indoor temperature is set to " + dataList.get("setTemperature").get(0).toString() +
+        setTemperature.setText("Indoor temperature is set to " + dataList.get("liveTemperatureData").get(0).toString() +
                 " Celsius.");
         linkConfigurations.remove("/temperature/");
         temperatureList.remove(temperatureList.size()-1);
@@ -115,22 +115,22 @@ public class TemperatureServiceImpl implements TemperatureService {
             iconLink += weather.getWeatherIcon().toString() + "-s.png";
         }
 
-        if (dataList.containsKey("weatherText")) {
-            dataList.get("weatherText").clear();
-            dataList.get("weatherText").add(text);
+        if (dataList.containsKey("liveWeatherInfoText")) {
+            dataList.get("liveWeatherInfoText").clear();
+            dataList.get("liveWeatherInfoText").add(text);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(text);
-            dataList.put("weatherText", dummyList);
+            dataList.put("liveWeatherInfoText", dummyList);
         }
 
-        if (dataList.containsKey("weatherIcon")) {
-            dataList.get("weatherIcon").clear();
-            dataList.get("weatherIcon").add(iconLink);
+        if (dataList.containsKey("liveWeatherStatusImage")) {
+            dataList.get("liveWeatherStatusImage").clear();
+            dataList.get("liveWeatherStatusImage").add(iconLink);
         } else {
             List<Object> dummyList = new ArrayList<>();
             dummyList.add(iconLink);
-            dataList.put("weatherIcon", dummyList);
+            dataList.put("liveWeatherStatusImage", dummyList);
         }
 
     }

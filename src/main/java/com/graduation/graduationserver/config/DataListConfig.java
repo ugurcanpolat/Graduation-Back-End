@@ -29,19 +29,19 @@ public class DataListConfig {
         temperatureDummyValues.add(22.9f);
         temperatureDummyValues.add(21.1f);
 
-        dataList.put("sensorTemperature", temperatureDummyValues);
+        dataList.put("historicalTemperatureData", temperatureDummyValues);
 
         List<Object> textDummyValues = new ArrayList<>();
 
-        dataList.put("weatherText", textDummyValues);
+        dataList.put("liveWeatherInfoText", textDummyValues);
 
         List<Object> imageDummyValues = new ArrayList<>();
 
-        dataList.put("weatherIcon", imageDummyValues);
+        dataList.put("liveWeatherStatusImage", imageDummyValues);
 
         List<Object> tempInfoDummyValues = new ArrayList<>();
         tempInfoDummyValues.add(tempInfoResponse.getTemperature());
-        dataList.put("setTemperature", tempInfoDummyValues);
+        dataList.put("liveTemperatureData", tempInfoDummyValues);
 
         return dataList;
     }

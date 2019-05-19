@@ -215,6 +215,9 @@ definitions:
     type: object
     allOf:
       - $ref: "#/definitions/BaseResponse"
+      - properties:
+          message:
+            type: string
 
   WeatherInformationResponse:
     type: object
